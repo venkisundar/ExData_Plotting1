@@ -1,7 +1,6 @@
-> # reading relevant data
-> data <- read.table("D://Data Science Working Directory//household_power_consumption.txt", sep = ";", skip = 66637, nrows = 2880)
-> # clearing name row and unrelevant variables, creating numerics
-> data <- data %>% select(V3) %>% mutate(V3 = as.numeric(as.character(V3)))
-> # create histogram
-> hist(data$V3, col = "red", main = "Global Active Power",
-+      xlab = "Global Active Power (killowatts)", ylab = "Frequency")
+> dataFile <- "D://Data Science Working Directory//household_power_consumption.txt"
+> data <- read.table(dataFile, header=TRUE, sep=";", stringsAsFactors=FALSE, dec=".")
+> subSetData <- data[data$Date %in% c("1/2/2007","2/2/2007") ,]
+> globalActivePower <- as.numeric(subSetData$Global_active_power)
+> png("plot1.png", width=480, height=480)
+> hist(globalActivePower, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
