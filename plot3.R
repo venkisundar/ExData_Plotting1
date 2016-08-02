@@ -1,13 +1,23 @@
-> data <- read.table("D://Data Science Working Directory//household_power_consumption.txt", sep = ";", skip = 66637, nrows = 2880)
-> data <- data %>% mutate(V1 = as.POSIXct(dmy_hms(as.character(paste(V1, V2)))),
-+                         V7 = as.numeric(as.character(V7)),
-+                         V8 = as.numeric(as.character(V8)),
-+                         V9 = as.numeric(as.character(V9))) %>% select(V1,V7:V9)
+dataFile <- "D://Data Science Working Directory//data/household_power_consumption.txt"
+> data <- read.table(dataFile, header=TRUE, sep=";", stringsAsFactors=FALSE, dec=".")
+Error in file(file, "rt") : cannot open the connection
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'D://Data Science Working Directory//data/household_power_consumption.txt': No such file or directory
 > 
 > 
-> with(data, plot(V1,V7, type="n", xlab = "", ylab = "Energy Sub Metering"))
-> with(data, points(V1,V7, col="black", type="l"))
-> with(data, points(V1,V8, col="red", type="l"))
-> with(data, points(V1,V9, col="blue", type="l"))
-> legend("topright", lty=1, col = c("black", "red", "blue"), 
-+        legend = c("Sub_Metering_1", "Sub_Metering_2", "Sub_Metering_3"))
+> dataFile <- "D://Data Science Working Directory//household_power_consumption.txt"
+> data <- read.table(dataFile, header=TRUE, sep=";", stringsAsFactors=FALSE, dec=".")
+> subSetData <- data[data$Date %in% c("1/2/2007","2/2/2007") ,]
+> #str(subSetData)
+> datetime <- strptime(paste(subSetData$Date, subSetData$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
+> globalActivePower <- as.numeric(subSetData$Global_active_power)
+> subMetering1 <- as.numeric(subSetData$Sub_metering_1)
+> subMetering2 <- as.numeric(subSetData$Sub_metering_2)
+> subMetering3 <- as.numeric(subSetData$Sub_metering_3)
+> 
+> png("plot3.png", width=480, height=480)
+> plot(datetime, subMetering1, type="l", ylab="Energy Submetering", xlab="")
+> lines(datetime, subMetering2, type="l", col="red")
+> lines(datetime, subMetering3, type="l", col="blue")
+> legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty=1, lwd=2.5, col=c("black", "red", "blue"))  
