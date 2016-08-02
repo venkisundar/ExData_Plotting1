@@ -1,28 +1,27 @@
-> # reading relevant data
-> data <- read.table("D://Data Science Working Directory//household_power_consumption.txt", sep = ";", skip = 66637, nrows = 2880)
+> dataFile <- "D://Data Science Working Directory//household_power_consumption.txt"
+> data <- read.table(dataFile, header=TRUE, sep=";", stringsAsFactors=FALSE, dec=".")
+> subSetData <- data[data$Date %in% c("1/2/2007","2/2/2007") ,]
+> #str(subSetData)
+> datetime <- strptime(paste(subSetData$Date, subSetData$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
+> globalActivePower <- as.numeric(subSetData$Global_active_power)
+> globalReactivePower <- as.numeric(subSetData$Global_reactive_power)
+> voltage <- as.numeric(subSetData$Voltage)
+> subMetering1 <- as.numeric(subSetData$Sub_metering_1)
+> subMetering2 <- as.numeric(subSetData$Sub_metering_2)
+> subMetering3 <- as.numeric(subSetData$Sub_metering_3)
 > 
-> # clearing name row and unrelevant variables, casting to right classes
-> data <- data %>% mutate(V1 = as.POSIXct(dmy_hms(as.character(paste(V1, V2)))),
-+                         V3 = as.numeric(as.character(V3)),
-+                         V4 = as.numeric(as.character(V4)),
-+                         V5 = as.numeric(as.character(V5)),
-+                         V7 = as.numeric(as.character(V7)),
-+                         V8 = as.numeric(as.character(V8)),
-+                         V9 = as.numeric(as.character(V9)))
+> png("plot4.png", width=480, height=480)
+> par(mfrow = c(2, 2)) 
 > 
+> plot(datetime, globalActivePower, type="l", xlab="", ylab="Global Active Power", cex=0.2)
 > 
+> plot(datetime, voltage, type="l", xlab="datetime", ylab="Voltage")
 > 
-> with(data, plot(V1,V3, type="l", xlab = "", ylab = "Global Active Power (kilowatts)"))
+> plot(datetime, subMetering1, type="l", ylab="Energy Submetering", xlab="")
+> lines(datetime, subMetering2, type="l", col="red")
+> lines(datetime, subMetering3, type="l", col="blue")
+> legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty=, lwd=2.5, col=c("black", "red", "blue"), bty="o")
 > 
-> with(data, plot(V1,V5, type="l", xlab = "datetime", ylab = "Voltage"))
-> 
-> with(data, plot(V1,V7, type="n", xlab = "", ylab = "Energy Sub Metering"))
-> with(data, points(V1,V7, col="black", type="l"))
-> with(data, points(V1,V8, col="red", type="l"))
-> with(data, points(V1,V9, col="blue", type="l"))
-> legend("topright", lty=1, col = c("black", "red", "blue"), 
-+        legend = c("Sub_Metering_1", "Sub_Metering_2", "Sub_Metering_3"))
-> 
-> with(data, plot(V1,V4, type="l", xlab = "datetime", ylab = "Global_reactive_power"))
+> plot(datetime, globalReactivePower, type="l", xlab="datetime", ylab="Global_reactive_power")
 > 
 > 
