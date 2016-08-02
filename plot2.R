@@ -1,7 +1,9 @@
-> # reading relevant data
-> data <- read.table("D://Data Science Working Directory//household_power_consumption.txt", sep = ";", skip = 66637, nrows = 2880)
-> data <- data %>% mutate(V1 = as.POSIXct(dmy_hms(as.character(paste(V1, V2)))),
-+                         V3 = as.numeric(as.character(V3))) %>% select(V1,V3)
+> dataFile <- "D://Data Science Working Directory//household_power_consumption.txt"
+> data <- read.table(dataFile, header=TRUE, sep=";", stringsAsFactors=FALSE, dec=".")
+> subSetData <- data[data$Date %in% c("1/2/2007","2/2/2007") ,]
 > 
-> with(data, plot(V1,V3, type="l", xlab = "", ylab = "Global Active Power (kilowatts)"))
-> 
+> #str(subSetData)
+> datetime <- strptime(paste(subSetData$Date, subSetData$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
+> globalActivePower <- as.numeric(subSetData$Global_active_power)
+> png("plot2.png", width=480, height=480)
+> plot(datetime, globalActivePower, type="l", xlab="", ylab="Global Active Power (kilowatts)")
